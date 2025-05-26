@@ -4,17 +4,18 @@ using TMPro;
 
 namespace MyFps
 {
-    //Ã¹¹øÂ° Æ®¸®°Å ¿¬Ãâ
+    //ì²«ë²ˆì§¸ íŠ¸ë¦¬ê±° ì—°ì¶œ
     public class BFirstTrigger : MonoBehaviour
     {
         #region Variables
         public GameObject thePlayer;
 
-        //È­»ìÇ¥
+        //í™”ì‚´í‘œ
         public GameObject theArrow;
         
-        //½Ã³ª¸®¿À ´ë»ç Ã³¸®
+        //ì‹œë‚˜ë¦¬ì˜¤ ëŒ€ì‚¬ ì²˜ë¦¬
         public TextMeshProUGUI sequenceText;
+        public AudioSource S1v3;
 
         [SerializeField]
         private string sequence = "Looks like a weapon on that table";
@@ -23,10 +24,10 @@ namespace MyFps
         #region Unity Event Method
         private void OnTriggerEnter(Collider other)
         {
-            //ÇÃ·¹ÀÌ¾î Ã¼Å©
+            //í”Œë ˆì´ì–´ ì²´í¬
             if (other.tag == "Player")
             {
-                //Æ®¸®°Å ÇØÁ¦
+                //íŠ¸ë¦¬ê±° í•´ì œ
                 this.GetComponent<BoxCollider>().enabled = false;
                 StartCoroutine(SequencePlayer());
             }
@@ -36,24 +37,24 @@ namespace MyFps
         #region Custom Method
         IEnumerator SequencePlayer()
         {
-            //ÇÃ·¹ÀÌ Ä³¸¯ÅÍ ºñÈ°¼ºÈ­  (ÇÃ·¹ÀÌ ¸ØÃã)
-            thePlayer.SetActive(false);
+            //í”Œë ˆì´ ìºë¦­í„° ë¹„í™œì„±í™”  (í”Œë ˆì´ ë©ˆì¶¤)
+            thePlayer.GetComponent<PlayerController>().enabled = false;
 
-            //´ë»ç Ãâ·Â :  "Looks like a weapon on that table."
+            //ëŒ€ì‚¬ ì¶œë ¥ :  "Looks like a weapon on that table."
             sequenceText.text = sequence;
-
-            //1ÃÊ µô·¹ÀÌ
+            S1v3.Play();
+            //1ì´ˆ ë”œë ˆì´
             yield return new WaitForSeconds(1f);
 
-            //È­»ìÇ¥ È°¼ºÈ­
+            //í™”ì‚´í‘œ í™œì„±í™”
             theArrow.SetActive(true);
 
-            //2ÃÊ µô·¹ÀÌ
+            //2ì´ˆ ë”œë ˆì´
             yield return new WaitForSeconds(2f);
 
             sequenceText.text = "";
-            //ÇÃ·¹ÀÌ Ä³¸¯ÅÍ È°¼ºÈ­
-            thePlayer.SetActive(true);
+            //í”Œë ˆì´ ìºë¦­í„° í™œì„±í™”
+            thePlayer.GetComponent<PlayerController>().enabled = true;
 
         }
         #endregion

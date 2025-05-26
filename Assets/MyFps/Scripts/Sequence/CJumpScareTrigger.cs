@@ -20,6 +20,9 @@ namespace MyFps
         //적 등장 사운드
         public AudioSource jumpScare;
 
+        //배경음
+        public AudioSource bgm;
+
         //애니메이션 파라미터
         private string isOpen = "IsOpen";
         #endregion
@@ -44,6 +47,9 @@ namespace MyFps
         //트리거 연출 구현
         IEnumerator SequencePlayer()
         {
+            //기본 배경음 정지
+            bgm.Stop();
+
             //문이 열린다
             animator.SetBool(isOpen, true);
 
@@ -64,6 +70,21 @@ namespace MyFps
             if(robot)
             {
                 robot.ChangeState(RobotState.R_Walk);
+            }
+
+            //배경음 전환을 위한 로봇 감시
+            StartCoroutine(CheckEnemy(robot));
+        }
+
+        IEnumerator CheckEnemy(Robot r) {
+            Debug.Log("Check sTart");
+            while (!r.GetComponent<EnemyHealth>().IsDead) {
+                yield return new WaitForSeconds(0.1f);
+            }
+            if (r.GetComponent<EnemyHealth>().IsDead) {
+                //로봇이 죽었을 때 배경음 재생
+                Debug.Log("Check End");
+                bgm.Play();
             }
         }
         #endregion

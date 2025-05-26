@@ -4,52 +4,59 @@ using System.Collections;
 
 namespace MyFps
 {
-    //ÇÃ·¹ÀÌ ¾À ¿ÀÇÁ´× ¿¬Ãâ
+    //í”Œë ˆì´ ì”¬ ì˜¤í”„ë‹ ì—°ì¶œ
     public class AOpenning : MonoBehaviour
     {
         #region Variables
-        //ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®
+        //í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸
         public GameObject thePlayer;
-        //ÆäÀÌ´õ °´Ã¼
+        //í˜ì´ë” ê°ì²´
         public SceneFader fader;
 
-        //½Ã³ª¸®¿À ´ë»ç Ã³¸®
+        //ìŒì„±
+        public AudioSource S1v1;
+        public AudioSource S1v2;
+        public AudioSource S1v3;
+
+        //ì‹œë‚˜ë¦¬ì˜¤ ëŒ€ì‚¬ ì²˜ë¦¬
         public TextMeshProUGUI sequenceText;
 
-        [SerializeField]
-        private string sequence = "I need get out of here";
+        [SerializeField] private string text1 = "Where am I?";
+        [SerializeField] private string text2 = "I need to get out from here";
         #endregion
 
         #region Unity Event Method
         private void Start()
         {
-            //Ä¿¼­ Á¦¾î
+            //ì»¤ì„œ ì œì–´
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            //¿ÀÇÁ´× ¿¬Ãâ ½ÃÀÛ
+            //ì˜¤í”„ë‹ ì—°ì¶œ ì‹œì‘
             StartCoroutine(SequencePlay());
         }
         #endregion
 
         #region Custom Method
-        //¿ÀÇÁ´× ¿¬Ãâ ÄÚ·çÆ¾ ÇÔ¼ö
+        //ì˜¤í”„ë‹ ì—°ì¶œ ì½”ë£¨í‹´ í•¨ìˆ˜
         IEnumerator SequencePlay()
         {
-            //0.ÇÃ·¹ÀÌ Ä³¸¯ÅÍ ºñ È°¼ºÈ­
+            //0.í”Œë ˆì´ ìºë¦­í„° ë¹„ í™œì„±í™”
             thePlayer.SetActive(false);
 
-            //1. ÆäÀÌµåÀÎ ¿¬Ãâ (1ÃÊ ´ë±âÈÄ ÆäÀÎµåÀÎ È¿°ú)
-            fader.FadeStart(1f);
+            sequenceText.text = text1;
+            S1v1.Play();
+            //1. í˜ì´ë“œì¸ ì—°ì¶œ (1ì´ˆ ëŒ€ê¸°í›„ í˜ì¸ë“œì¸ íš¨ê³¼)
+            fader.FadeStart(3f);
 
-            //2.È­¸é ÇÏ´Ü¿¡ ½Ã³ª¸®¿À ÅØ½ºÆ® È­¸é Ãâ·Â(3ÃÊ)
-            sequenceText.text = sequence;
-
-            //3. 3ÃÊÈÄ¿¡ ½Ã³ª¸®¿À ÅØ½ºÆ® ¾ø¾îÁø´Ù
+            //2.í™”ë©´ í•˜ë‹¨ì— ì‹œë‚˜ë¦¬ì˜¤ í…ìŠ¤íŠ¸ í™”ë©´ ì¶œë ¥(3ì´ˆ)
+            sequenceText.text = text2;
+            S1v2.Play();
+            //3. 3ì´ˆí›„ì— ì‹œë‚˜ë¦¬ì˜¤ í…ìŠ¤íŠ¸ ì—†ì–´ì§„ë‹¤
             yield return new WaitForSeconds(3f);
             sequenceText.text = "";
 
-            //4.ÇÃ·¹ÀÌ Ä³¸¯ÅÍ È°¼ºÈ­
+            //4.í”Œë ˆì´ ìºë¦­í„° í™œì„±í™”
             thePlayer.SetActive(true);
         }
         #endregion
