@@ -7,78 +7,59 @@ namespace MyFps
     public class PlayerController : MonoBehaviour
     {
         #region Variables
-        //ÂüÁ¶
+        //ì°¸ì¡°
         private CharacterController controller;
 
-        //ÀÔ·Â - ÀÌµ¿
+        //ì…ë ¥ - ì´ë™
         private Vector2 inputMove;
 
-        //ÀÌµ¿
+        //ì´ë™
         [SerializeField]
         private float moveSpeed = 10f;
 
-        //Áß·Â
+        //ì¤‘ë ¥
         private float gravity = -9.81f;
         [SerializeField]
-        private Vector3 velocity;       //Áß·Â °è»ê¿¡ ÀÇÇÑ ÀÌµ¿ ¼Óµµ
+        private Vector3 velocity;       //ì¤‘ë ¥ ê³„ì‚°ì— ì˜í•œ ì´ë™ ì†ë„
 
-        //±×¶ó¿îµå Ã¼Å©
-        public Transform groundCheck;   //¹ß ¹Ù´Ú À§Ä¡
-        [SerializeField] private float checkRange = 0.2f;    //Ã¼Å© ÇÏ´Â ±¸ÀÇ ¹İ°æ
-        [SerializeField] private LayerMask groundMask;       //±×¶ó¿îµå ·¹ÀÌ¾î ÆÇº°
+        //ê·¸ë¼ìš´ë“œ ì²´í¬
+        public Transform groundCheck;   //ë°œ ë°”ë‹¥ ìœ„ì¹˜
+        [SerializeField] private float checkRange = 0.2f;    //ì²´í¬ í•˜ëŠ” êµ¬ì˜ ë°˜ê²½
+        [SerializeField] private LayerMask groundMask;       //ê·¸ë¼ìš´ë“œ ë ˆì´ì–´ íŒë³„
 
-        //Á¡ÇÁ ³ôÀÌ
+        //ì í”„ ë†’ì´
         [SerializeField] private float jumpHeight = 1f;
 
-        //Ã¼·Â
-        private float currentHealth;
-        [SerializeField]
-        private float maxHealth = 20;
-
-        private bool isDeath = false;
-
-        //µ¥¹ÌÁö È¿°ú
-        public GameObject damageFlash;
-
-        public AudioSource hurt01;
-        public AudioSource hurt02;
-        public AudioSource hurt03;
-
-        //Á×À½ Ã³¸®
-        public SceneFader fader;
-        [SerializeField]
-        private string loadToScene = "GameOver";
+        //ì‚¬ìš©í•  ë¬´ê¸°
+        [SerializeField] private GameObject pistolPrefab;
         #endregion
 
         #region Unity Event Method
         private void Start()
         {
-            //ÂüÁ¶
+            //ì°¸ì¡°
             controller = this.GetComponent<CharacterController>();
-
-            //ÃÊ±âÈ­
-            currentHealth = maxHealth;
         }
 
         private void Update()
         {
-            //¶¥¿¡ ÀÖÀ¸¸é
+            //ë•…ì— ìˆìœ¼ë©´
             bool isGrounded = GroundCheck();
             if (isGrounded && velocity.y < 0f)
             {
                 velocity.y = -10f;
             }
 
-            //¹æÇâ
-            //GlobalÃà ÀÌµ¿
+            //ë°©í–¥
+            //Globalì¶• ì´ë™
             //Vector3 moveDir = Vector3.right * inputMove.x + Vector3.forward * inputMove.y;
-            //LocalÃà ÀÌµ¿
+            //Localì¶• ì´ë™
             Vector3 moveDir = transform.right * inputMove.x + transform.forward * inputMove.y;
 
-            //ÀÌµ¿
+            //ì´ë™
             controller.Move(moveDir * Time.deltaTime * moveSpeed);
 
-            //Áß·Â¿¡ µû¸¥ yÃà ÀÌµ¿
+            //ì¤‘ë ¥ì— ë”°ë¥¸ yì¶• ì´ë™
             velocity.y += gravity * Time.deltaTime;
             controller.Move(velocity * Time.deltaTime);
 
@@ -86,7 +67,7 @@ namespace MyFps
         #endregion
 
         #region Custom Method
-        //Input ½Ã½ºÅÛ¿¡ µî·ÏÇÒ ÇÔ¼ö
+        //Input ì‹œìŠ¤í…œì— ë“±ë¡í•  í•¨ìˆ˜
         public void OnMove(InputAction.CallbackContext context)
         {
             inputMove = context.ReadValue<Vector2>();
@@ -96,66 +77,29 @@ namespace MyFps
         {
             if (context.started && GroundCheck())
             {
-                //Á¡ÇÁ ³ôÀÌ¸¸Å­ ¶Ù±â À§ÇÑ ¼Óµµ ±¸ÇÏ±â
+                //ì í”„ ë†’ì´ë§Œí¼ ë›°ê¸° ìœ„í•œ ì†ë„ êµ¬í•˜ê¸°
                 velocity.y = Mathf.Sqrt(-2f * gravity * jumpHeight);
             }
         }
 
-        //±×¶ó¿îµå Ã¼Å©
+        public void OnFire(InputAction.CallbackContext context) {
+            if (context.started && PlayerManager.CurrentWeapon == WeaponType.Pistol) {
+                //ì´ì•Œ ë°œì‚¬
+                PistolShoot pistol = pistolPrefab.GetComponent<PistolShoot>();
+                if (pistol != null && pistol.gameObject.activeSelf) {
+                    pistol.FireAction();
+                }
+            }
+        }
+
+        //ê·¸ë¼ìš´ë“œ ì²´í¬
         bool GroundCheck()
         {
             return Physics.CheckSphere(groundCheck.position, checkRange, groundMask);
         }
 
 
-        //ÇÃ·¹ÀÌ¾î µ¥¹ÌÁö
-        public void TakeDamage(float damage)
-        {
-            currentHealth -= damage;
-            Debug.Log($"player currentHealth: {currentHealth}");
-
-            //µ¥¹ÌÁö ¿¬Ãâ Sfx, Vfx
-            StartCoroutine(DamageEffect());
-
-            if(currentHealth <= 0 && isDeath == false)
-            {
-                Die();
-            }
-        }
-
-        //- È­¸éÀüÃ¼ »¡°£»ö ÇÃ·¡½¬ È¿°ú
-        //- µ¥¹ÌÁö »ç¿îµå 3°³Áß 1 ·£´ı ¹ß»ı
-        IEnumerator DamageEffect()
-        {
-            //vfx
-            damageFlash.SetActive(true);
-
-            //sfx
-            int randNum = Random.Range(1, 4);
-            if(randNum == 1)
-            {
-                hurt01.Play();
-            }
-            else if (randNum == 2)
-            {
-                hurt02.Play();
-            }
-            else
-            {
-                hurt03.Play();
-            }
-
-            yield return new WaitForSeconds(1f);
-            damageFlash.SetActive(false);
-        }
-
-        private void Die()
-        {
-            isDeath = true;
-
-            //Á×À½Ã³¸®
-            fader.FadeTo(loadToScene);
-        }
+        
         #endregion
     }
 }

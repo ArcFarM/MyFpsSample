@@ -4,33 +4,36 @@ using NUnit.Framework.Constraints;
 
 namespace MyFps
 {
-    //Àû µîÀå Æ®¸®°Å ¿¬Ãâ
+    //ì  ë“±ì¥ íŠ¸ë¦¬ê±° ì—°ì¶œ
     public class CJumpScareTrigger : MonoBehaviour
     {
         #region Variables
-        //¹®¿­¸®´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+        //ë¬¸ì—´ë¦¬ëŠ” ì• ë‹ˆë©”ì´ì…˜
         public Animator animator;
 
-        //¹®¿­¸®´Â »ç¿îµå
+        //ë¬¸ì—´ë¦¬ëŠ” ì‚¬ìš´ë“œ
         public AudioSource doorBang;
 
-        //Àû ¿ÀºêÁ§Æ®
+        //ì  ì˜¤ë¸Œì íŠ¸
         public GameObject enemy;
 
-        //Àû µîÀå »ç¿îµå
+        //ì  ë“±ì¥ ì‚¬ìš´ë“œ
         public AudioSource jumpScare;
 
-        //¾Ö´Ï¸ŞÀÌ¼Ç ÆÄ¶ó¹ÌÅÍ
+        //ì• ë‹ˆë©”ì´ì…˜ íŒŒë¼ë¯¸í„°
         private string isOpen = "IsOpen";
         #endregion
 
         #region Unity Event Method
+        private void Start() {
+            this.gameObject.SetActive(false); //ì‹œì‘ ì‹œ íŠ¸ë¦¬ê±° ë¹„í™œì„±í™”
+        }
         private void OnTriggerEnter(Collider other)
         {
-            //ÇÃ·¹ÀÌ¾î Ã¼Å©
+            //í”Œë ˆì´ì–´ ì²´í¬
             if(other.tag == "Player")
             {
-                //Æ®¸®°Å ÇØÁ¦
+                //íŠ¸ë¦¬ê±° í•´ì œ
                 this.GetComponent<BoxCollider>().enabled = false;
                 StartCoroutine(SequencePlayer());
             }
@@ -38,25 +41,25 @@ namespace MyFps
         #endregion
 
         #region Custom Method
-        //Æ®¸®°Å ¿¬Ãâ ±¸Çö
+        //íŠ¸ë¦¬ê±° ì—°ì¶œ êµ¬í˜„
         IEnumerator SequencePlayer()
         {
-            //¹®ÀÌ ¿­¸°´Ù
+            //ë¬¸ì´ ì—´ë¦°ë‹¤
             animator.SetBool(isOpen, true);
 
-            //¹®ÀÌ ¿­¸®´Â »ç¿îµå
+            //ë¬¸ì´ ì—´ë¦¬ëŠ” ì‚¬ìš´ë“œ
             doorBang.Play();
 
-            //Àû µîÀå 
+            //ì  ë“±ì¥ 
             enemy.SetActive(true);
 
-            //1ÃÊ µô·¹ÀÌ
+            //1ì´ˆ ë”œë ˆì´
             yield return new WaitForSeconds(1f);
 
-            //Àû µîÀå »ç¿îµå ÇÃ·¹ÀÌ
+            //ì  ë“±ì¥ ì‚¬ìš´ë“œ í”Œë ˆì´
             jumpScare.Play();
 
-            //·Îº¿ÀÇ »óÅÂ°¡ °È±â »óÅÂ·Î º¯°æ
+            //ë¡œë´‡ì˜ ìƒíƒœê°€ ê±·ê¸° ìƒíƒœë¡œ ë³€ê²½
             Robot robot = enemy.GetComponent<Robot>();
             if(robot)
             {

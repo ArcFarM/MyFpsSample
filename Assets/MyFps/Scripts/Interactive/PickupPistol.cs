@@ -3,23 +3,34 @@ using UnityEngine;
 
 namespace MyFps
 {
-    //¾ÆÀÌÅÛ(±ÇÃÑ) È¹µæ ÀÎÅÍ·¢Æ¼ºê ±¸Çö
+    //ì•„ì´í…œ(ê¶Œì´) íšë“ ì¸í„°ë™í‹°ë¸Œ êµ¬í˜„
     public class PickupPistol : Interactive
     {
         #region Variables        
-        //ÀÎÅÍ·¢Æ¼ºê ¾×¼Ç ¿¬Ãâ
+        //ì¸í„°ë™í‹°ë¸Œ ì•¡ì…˜ ì—°ì¶œ
         public GameObject realPistol;
         public GameObject theArrow;
+        public ShowAmmo ammoUI;
+        //ë¬´ê¸° ì§‘ê¸° ì „ì—ëŠ” ì  ì¡°ìš° íŠ¸ë¦¬ê±° ë¹„í™œì„±í™” ë° íƒ„í™˜ê³¼ ìƒí˜¸ì‘ìš© ë¶ˆê°€
+        public GameObject enemyTrigger;
+        public GameObject ammoTrigger;
         #endregion
 
         #region Custom Method  
         protected override void DoAction()
         {
-            //¹«±âÈ¹µæ, Ãæµ¹Ã¼ Á¦°Å
+            //ë¬´ê¸°íšë“, ì¶©ëŒì²´ ì œê±°
             realPistol.SetActive(true);
             theArrow.SetActive(false);
+            //ë¬´ê¸° ìœ í˜• ì„¤ì •
+            PlayerManager.CurrentWeapon = WeaponType.Pistol;
+            //ë¬´ê¸° UI í™œì„±í™”
+            ammoUI.EnableAmmoDisplay();
+            //íŠ¸ë¦¬ê±° í™œì„±í™”
+            enemyTrigger.SetActive(true);
+            ammoTrigger.SetActive(true);
 
-            this.gameObject.SetActive(false);   //fake pistol ¹× Ãæµ¹Ã¼ Á¦°Å                    
+            this.gameObject.SetActive(false);   //fake pistol ë° ì¶©ëŒì²´ ì œê±°                    
         }
         #endregion
     }

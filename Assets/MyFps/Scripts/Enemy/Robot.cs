@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace MyFps
 {
-    //·Îº¿ »óÅÂ
+    //ë¡œë´‡ ìƒíƒœ
     public enum RobotState
     {
         R_Idle = 0,
@@ -11,166 +11,155 @@ namespace MyFps
         R_Death
     }
 
-    //enemy(·Îº¿)À» Á¦¾îÇÏ´Â Å¬·¡½º
-    public class Robot : MonoBehaviour
-    {
+    //enemy(ë¡œë´‡)ì„ ì œì–´í•˜ëŠ” í´ë˜ìŠ¤
+    public class Robot : MonoBehaviour {
         #region Variables
-        //ÂüÁ¶
+        //ì°¸ì¡°
         private Animator animator;
-        public Transform thePlayer; //Å¸°Ù
+        public Transform thePlayer; //íƒ€ê²Ÿ
 
-        //·Îº¿ÀÇ ÇöÀç »óÅÂ
+        //ë¡œë´‡ì˜ í˜„ì¬ ìƒíƒœ
         private RobotState robotState;
-        //·Îº¿ÀÇ ÀÌÀü »óÅÂ
+        //ë¡œë´‡ì˜ ì´ì „ ìƒíƒœ
         private RobotState beforeState;
 
-        //Ã¼·Â
-        private float currentHealth;
-        [SerializeField]
-        private float maxHealth = 20;
-
-        private bool isDeath = false;
-
-        //ÀÌµ¿
+        //ì²´ë ¥
+        EnemyHealth enemyHealth;
+        bool deadFlag = false;
+        //ì´ë™
         [SerializeField]
         private float moveSpeed = 5f;
 
-        //°ø°İ
+        //ê³µê²©
         [SerializeField]
         private float attackRange = 1.5f;
 
-        //°ø°İ·Â
+        //ê³µê²©ë ¥
         [SerializeField]
         private float attackDamage = 5f;
 
-        //°ø°İ Å¸ÀÌ¸Ó
+        //ê³µê²© íƒ€ì´ë¨¸
         [SerializeField]
         private float attackTime = 2f;
         private float countdown;
 
-        //¾Ö´Ï¸ŞÀÌ¼Ç ÆÄ¶ó¹ÌÅÍ
+        //ì• ë‹ˆë©”ì´ì…˜ íŒŒë¼ë¯¸í„°
         private string enemyState = "EnemyState";
         #endregion
 
         #region Unity Event Method
+        void Awake() {
+            //ì°¸ì¡°
+            enemyHealth = this.GetComponent<EnemyHealth>();
+            enemyHealth.OnDeathEvent += OnDeathEvent;
+        }
         private void Start()
         {
-            //ÂüÁ¶
+            //ì°¸ì¡°
             animator = this.GetComponent<Animator>();
-
-            //ÃÊ±âÈ­
-            currentHealth = maxHealth;
         }
 
         private void OnEnable()
         {
-            //ÃÊ±âÈ­
+            //ì´ˆê¸°í™”
             ChangeState(RobotState.R_Idle);
         }
-
+        private void OnDisable() {
+            //ì´ˆê¸°í™”
+            enemyHealth.OnDeathEvent -= OnDeathEvent;
+        }
         private void Update()
         {
-            //ÀÌµ¿
+            //ì´ë™
+            if (enemyHealth.IsDead) {
+                return;
+            }
+
             Vector3 target = new Vector3(thePlayer.position.x, 0f, thePlayer.position.z);
             Vector3 dir = target - this.transform.position;
             float distance = Vector3.Distance(transform.position, target);
-            //°ø°İ¹üÀ§ Ã¼Å©
+            //ê³µê²©ë²”ìœ„ ì²´í¬
             if(distance <= attackRange)
             {
                 ChangeState(RobotState.R_Attack);
-            }            
+            }  else ChangeState(RobotState.R_Walk);
 
-            //»óÅÂ ±¸Çö
-            switch(robotState)
-            {
-                case RobotState.R_Idle:
-                    break;
+            //ìƒíƒœ êµ¬í˜„
+            switch (robotState) {
+                    case RobotState.R_Idle:
+                        break;
 
-                case RobotState.R_Walk:
-                    transform.Translate(dir.normalized * Time.deltaTime * moveSpeed, Space.World);
-                    transform.LookAt(target);
-                    break;
+                    case RobotState.R_Walk:
+                        transform.Translate(dir.normalized * Time.deltaTime * moveSpeed, Space.World);
+                        transform.LookAt(target);
+                        break;
 
-                case RobotState.R_Attack:                    
-                    //°ø°İ ¹üÀ§ Ã¼Å©
-                    if(distance > attackRange)
-                    {
-                        ChangeState(RobotState.R_Walk);
-                    }
-                    break;
+                    case RobotState.R_Attack:
+                        //ê³µê²© ë²”ìœ„ ì²´í¬
+                        if (distance > attackRange) {
+                            ChangeState(RobotState.R_Walk);
+                        }
+                        break;
 
-                case RobotState.R_Death:
-                    break;
-            }
+                    case RobotState.R_Death:
+                        break;
+                }
         }
         #endregion
 
         #region Custom Method
-        //»õ·Î¿î »óÅÂ¸¦ ¸Å°³º¯¼ö·Î ¹Ş¾Æ »õ·Î¿î »óÅÂ·Î ¼ÂÆÃ
+        //ìƒˆë¡œìš´ ìƒíƒœë¥¼ ë§¤ê°œë³€ìˆ˜ë¡œ ë°›ì•„ ìƒˆë¡œìš´ ìƒíƒœë¡œ ì…‹íŒ…
         public void ChangeState(RobotState newState)
         {
-            //ÇöÀç »óÅÂ Ã¼Å©
+            //í˜„ì¬ ìƒíƒœ ì²´í¬
             if(robotState == newState)
             {
                 return;
             }
 
-            //ÇöÀç »óÅÂ¸¦ ÀÌÀü »óÅÂ·Î ÀúÀå
+            //í˜„ì¬ ìƒíƒœë¥¼ ì´ì „ ìƒíƒœë¡œ ì €ì¥
             beforeState = robotState;
-            //»õ·Î¿î »óÅÂ¸¦ ÇöÀç »óÅÂ·Î ÀúÀå
+            //ìƒˆë¡œìš´ ìƒíƒœë¥¼ í˜„ì¬ ìƒíƒœë¡œ ì €ì¥
             robotState = newState;
 
-            //»óÅÂ º¯°æ¿¡ µû¸¥ ±¸Çö ³»¿ë
+            //ìƒíƒœ ë³€ê²½ì— ë”°ë¥¸ êµ¬í˜„ ë‚´ìš©
             animator.SetInteger(enemyState, (int)robotState);
         }
 
-        //µ¥¹ÌÁö ÀÔ±â
-        public void TakeDamage(float damage)
-        {
-            currentHealth -= damage;
-            Debug.Log($"robot currentHealth: {currentHealth}");
-
-            //µ¥¹ÌÁö ¿¬Ãâ (Sfx, Vfx)
-
-            if (currentHealth <= 0f && isDeath == false)
-            {
-                Die();
-            }
-        }
-
-        //Á×±â
-        private void Die()
-        {
-            isDeath = true;
-
-            //Á×À½ Ã³¸®
-            ChangeState(RobotState.R_Death);
-
-            //º¸»óÃ³¸®..
-        }
-
-        //2ÃÊ¸¶´Ù µ¥¹ÌÁö¸¦ 5¾¿ ÁØ´Ù
+        //2ì´ˆë§ˆë‹¤ ë°ë¯¸ì§€ë¥¼ 5ì”© ì¤€ë‹¤
         private void OnAttackTimer()
         {
             countdown += Time.deltaTime;
             if(countdown >= attackTime)
             {
-                //Å¸ÀÌ¸Ó ³»¿ë
+                //íƒ€ì´ë¨¸ ë‚´ìš©
                 Attack();
 
-                //Å¸ÀÌ¸Ó ÃÊ±âÈ­
+                //íƒ€ì´ë¨¸ ì´ˆê¸°í™”
                 countdown = 0;
             }
         }
 
         public void Attack()
         {
-            Debug.Log($"ÇÃ·¹ÀÌ¾î¿¡°Ô {attackDamage}¸¦ ÁØ´Ù");
-            PlayerController playerController = thePlayer.GetComponent<PlayerController>();
-            if (playerController)
+            Debug.Log($"í”Œë ˆì´ì–´ì—ê²Œ {attackDamage}ë¥¼ ì¤€ë‹¤");
+            IDamagable playerController = thePlayer.GetComponent<IDamagable>();
+            if (playerController != null)
             {
                 playerController.TakeDamage(attackDamage);
             }
+        }
+
+        //ì‚¬ë§ ì‹œ ì´ë²¤íŠ¸
+        public void OnDeathEvent() {
+            if (deadFlag) return;
+            deadFlag = true;
+
+            //ì£½ìŒ ì²˜ë¦¬
+            ChangeState(RobotState.R_Death);
+            GetComponent<BoxCollider>().enabled = false; //ì¶©ëŒì²´ ë¹„í™œì„±í™”
+            //ì‹œì²´ ì²˜ë¦¬
+            Destroy(this.gameObject, 10f);
         }
         #endregion
     }

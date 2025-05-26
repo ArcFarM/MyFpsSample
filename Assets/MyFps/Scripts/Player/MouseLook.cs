@@ -6,36 +6,30 @@ namespace MyFps
     public class MouseLook : MonoBehaviour
     {
         #region Variables
-        //ÂüÁ¶
-        public Transform cameraTrans;   //Ä«¸Ş¶ó ·çÆ®
+        //ì°¸ì¡°
+        public Transform cameraTrans;   //ì¹´ë©”ë¼ ë£¨íŠ¸
 
-        //¸¶¿ì½º ÀÔ·Â°ªÀÇ º¸Á¤°ª
+        //ë§ˆìš°ìŠ¤ ì…ë ¥ê°’ì˜ ë³´ì •ê°’
         [SerializeField]
         private float sensivity = 100f;
 
-        //Ä«¸Ş¶ó È¸Àü
+        //ì¹´ë©”ë¼ íšŒì „
         private float rotateX;
 
-        //¸¶¿ì½º ÀÔ·Â(À§Ä¡) °ª
+        //ë§ˆìš°ìŠ¤ ì…ë ¥(ìœ„ì¹˜) ê°’
         private Vector2 inputLook;
 
-        //±×¶ó¿îµå Ã¼Å©
+        //ê·¸ë¼ìš´ë“œ ì²´í¬
 
         #endregion
 
         #region Unity Event Method
         private void Update()
         {
-            //¸¶¿ì½º Æ÷Áö¼Ç ÁÂ¿ì ÀÔ·Â ¹Ş¾Æ - old Input 
-            //float mouseX = Input.GetAxis("Mouse X") * sensivity;
-
-            //ÇÃ·¹ÀÌ¾î ÁÂ¿ì È¸Àü
+            //í”Œë ˆì´ì–´ ì¢Œìš° íšŒì „
             this.transform.Rotate(Vector3.up * Time.deltaTime * inputLook.x * sensivity);
 
-            //¸¶¿ì½º Æ÷Áö¼Ç À§¾Æ·¡ ÀÔ·Â ¹Ş¾Æ Ä«¸Ş¶ó À§¾Æ·¡ È¸Àü - old Input
-            //float mouseY = Input.GetAxis("Mouse Y") * sensivity;
-
-            //Ä«¸Ş¶ó À§¾Æ·¡ È¸Àü
+            //ì¹´ë©”ë¼ ìœ„ì•„ë˜ íšŒì „
             rotateX -= inputLook.y * Time.deltaTime * sensivity;
             rotateX = Mathf.Clamp(rotateX, -90f, 40f);            
             cameraTrans.localRotation = Quaternion.Euler(rotateX, 0f, 0f);
