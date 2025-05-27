@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using NUnit.Framework.Constraints;
+using Unity.VisualScripting;
 
 namespace MyFps
 {
@@ -25,6 +26,9 @@ namespace MyFps
 
         //애니메이션 파라미터
         private string isOpen = "IsOpen";
+
+        //문 콜라이더
+        private BoxCollider boxCollider;
         #endregion
 
         #region Unity Event Method
@@ -39,6 +43,7 @@ namespace MyFps
                 //트리거 해제
                 this.GetComponent<BoxCollider>().enabled = false;
                 StartCoroutine(SequencePlayer());
+                boxCollider.enabled = false; //문 콜라이더 비활성화
             }
         }
         #endregion
