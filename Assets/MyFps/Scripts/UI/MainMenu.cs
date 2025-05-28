@@ -15,6 +15,8 @@ namespace MyFps {
         #region Unity Event Method
         private void Start() {
             sceneFader.FadeStart(0f); //게임 시작시 페이드 효과
+            //음성 재생
+            AudioManager.Instance.Play("MenuMusic");
         }
         #endregion
 

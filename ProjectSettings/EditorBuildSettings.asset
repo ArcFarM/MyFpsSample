@@ -6,11 +6,20 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/MyFps/Scenes/PalyScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/MyFps/Scenes/Title.unity
+    guid: 01b5e4199240bcf488a857468e975412
+  - enabled: 1
+    path: Assets/MyFps/Scenes/MainMenu.unity
+    guid: effd5985563df20499abd1d6b4246141
   - enabled: 1
     path: Assets/MyFps/Scenes/GameOver.unity
     guid: a8683571dcd310e4ba6313a5a830c623
+  - enabled: 1
+    path: Assets/MyFps/Scenes/Scene1.unity
+    guid: bbe50a6bc95f41b4abde0a8847bf6496
+  - enabled: 1
+    path: Assets/MyFps/Scenes/Scene2.unity
+    guid: 7bb36302c7f10784b9101303e86833d5
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
