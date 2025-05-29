@@ -13,7 +13,7 @@ namespace MyFps {
 
         #region Unity Event Methods
         private void Start() {
-            DisableAmmoDisplay(); // 시작 시 탄환 표시 비활성화
+            if(PlayerManager.CurrentWeapon == WeaponType.None) DisableAmmoDisplay(); // 시작 시 탄환 표시 비활성화
         }
         // Update is called once per frame
         void Update() {

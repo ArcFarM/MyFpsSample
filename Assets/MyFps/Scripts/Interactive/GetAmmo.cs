@@ -8,7 +8,7 @@ namespace MyFps {
         #endregion
         #region Unity Event Method
         private void Start() {
-            this.gameObject.SetActive(false); //시작 시 오브젝트 비활성화
+            //this.gameObject.SetActive(false); //시작 시 오브젝트 비활성화
         }
         #endregion
         #region Custom Method
