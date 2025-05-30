@@ -65,7 +65,7 @@ namespace MyFps
             } //탄약이 없으면 발사 불가
             else {
                 PlayerManager.Instance.UseAmmo(1); //탄약 사용
-                Debug.Log($"current ammo : {PlayerManager.Instance.Ammo}");
+                //Debug.Log($"current ammo : {PlayerManager.Instance.Ammo}");
             }
                 //효과 출력
                 animator.SetTrigger(fire);

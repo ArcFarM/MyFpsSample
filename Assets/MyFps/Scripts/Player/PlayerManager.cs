@@ -6,10 +6,17 @@ namespace MyFps {
         Pistol,
     }
 
+    public enum KeyType {
+        KEY_ROOM2,
+        MAX_KEY //최대 키 개수
+    }
+
     public class PlayerManager : PersistanceSingleton <PlayerManager> {
         #region Variables
         //플레이어의 현재 무기
         private WeaponType currentWeapon;
+        //열쇠 보유 현황
+        bool[] havingKeys;
         //플레이어의 현재 탄환
         int currentAmmo = 0;
         #endregion
@@ -19,6 +26,7 @@ namespace MyFps {
         public static WeaponType CurrentWeapon {
             get; set;
         }
+        
         public int Ammo {
             get { return currentAmmo; }
             set { currentAmmo = value; }
@@ -28,6 +36,7 @@ namespace MyFps {
         #region Unity Event Methods
         private void Start() {
             currentWeapon = WeaponType.None;
+            havingKeys = new bool[(int)KeyType.MAX_KEY];
         }
         #endregion
 
@@ -44,6 +53,15 @@ namespace MyFps {
             if (currentAmmo >= amount) {
                 currentAmmo -= amount;
             }
+        }
+
+        public void GetKey(KeyType key) {
+            havingKeys[(int)key] = true;
+        }
+
+        public bool HasKey(KeyType key) {
+            havingKeys[(int)key] = true;
+            return false;
         }
         #endregion
 
