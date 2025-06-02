@@ -8,6 +8,7 @@ namespace MyFps {
 
     public enum KeyType {
         KEY_ROOM2,
+        KEY_LEFTPIC, KEY_RIGHTPIC,
         MAX_KEY //최대 키 개수
     }
 
@@ -60,8 +61,7 @@ namespace MyFps {
         }
 
         public bool HasKey(KeyType key) {
-            havingKeys[(int)key] = true;
-            return false;
+            return havingKeys[(int)key];
         }
         #endregion
 
