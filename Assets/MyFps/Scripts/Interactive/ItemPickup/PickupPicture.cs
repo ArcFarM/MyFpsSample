@@ -32,6 +32,8 @@ namespace MyFps {
         }
 
         IEnumerator Action() {
+            //콜라이더 제거
+            GetComponent<Collider>().enabled = false;
             //열쇠 획득
             PlayerManager.Instance.GetKey(key);
             //오브젝트 비활성화
@@ -51,15 +53,17 @@ namespace MyFps {
 
             //UI 활성화 된 동안 대기 + 입력 비활성화
             playerController.enabled = false; //플레이어 컨트롤러 비활성화
-            Debug.Log("Wait for some seconds...");
+            //Debug.Log("Wait for some seconds...");
             yield return new WaitForSeconds(waitTime);
-            Debug.Log("Wait finished.");
+            //Debug.Log("Wait finished.");
             playerController.enabled = true; //플레이어 컨트롤러 활성화
             //UI 비활성화
             gotItemUI.SetActive(false);
             gotItemText.gameObject.SetActive(false);
             HideActionUI(); //액션 UI 숨기기
             Destroy(gameObject, 1f); //오브젝트 제거
+            //Debug.Log(PlayerManager.Instance.HasKey(KeyType.KEY_LEFTPIC));
+            //Debug.Log(PlayerManager.Instance.HasKey(KeyType.KEY_RIGHTPIC));
         }
         #endregion
     }
