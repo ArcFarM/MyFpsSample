@@ -8,7 +8,10 @@ namespace MyFps
         R_Idle = 0,
         R_Walk,
         R_Attack,
-        R_Death
+        R_Death,
+        R_Patrol,
+        R_Chase,
+        R_MAX
     }
 
     //enemy(로봇)을 제어하는 클래스
@@ -115,7 +118,7 @@ namespace MyFps
             if(robotState == newState)
             {
                 return;
-            }
+            }   
 
             //현재 상태를 이전 상태로 저장
             beforeState = robotState;
